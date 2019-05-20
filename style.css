@@ -18,7 +18,8 @@ body {
 #scene {
 	perspective: 15em;
 	perspective-origin: center;
-	background: white;
+	background-image: url('img/background.png');
+	background-size: 100% 100%;
 }
 
 #power-container {
@@ -42,6 +43,9 @@ body {
 
 .thing {
 	position: absolute;
+	background-size: contain;
+	background-position: 50% 50%;
+	background-repeat: no-repeat;
 }
 
 .attendee {
@@ -71,9 +75,13 @@ body {
 	text-align: center;
 	font-family: 'Patrick Hand', 'Chalkboard', 'Comic Sans MS', sans-serif;
 	overflow: hidden;
+	line-height: 1;
+	padding: 0.25em 0.5em;
 }
 .placard.racist > div {
 	font-family: 'Schoolbell', 'Chalkboard', 'Comic Sans MS', sans-serif;
+	line-height: 0.7;
+	padding: 0.5em;
 }
 .placard:before {
 	border: 0.1em solid black;
@@ -101,23 +109,26 @@ body {
 	top: 10em;
 	border-radius: 100%;
 	opacity: 0;
+	background-image: url('img/big-splat.png');
 }
 .splat.go {
 	animation: fadeout 1s;
 }
 @keyframes fadeout {
-	from { opacity: 0.75; }
-	95% { opacity: 0.5; }
+	from { opacity: 1; }
 	to { opacity: 0; }
 }
 
 .stain {
 	position: absolute;
-	width: 2em;
-	height: 2em;
+	width: 3em;
+	height: 3em;
 	border-radius: 1em;
-	background: #f88;
-	transform: translate(-1em, -1em);
+	background-image: url('img/splat.png');
+	background-size: contain;
+	background-repeat: no-repeat;
+	background-origin: 50% 50%;
+	transform: translate(-1.5em, -1.5em);
 }
 
 .fash {

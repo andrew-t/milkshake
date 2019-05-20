@@ -1,5 +1,4 @@
-const attendance = 75,
-	width = 30,
+const width = 30,
 	depth = 20,
 	height = 12,
 	placardCount = 7,
@@ -23,8 +22,9 @@ document.addEventListener('DOMContentLoaded', e => {
 		power = 0,
 		mouseDown, mouseUp, lastReset = 0, aiming = true, done = false;
 
-	for (let i = 0; i < attendance; ++i) {
-		const attendee = new Attendee();
+	for (let x = 0; x < 9; ++x)
+	for (let y = 0; y < 9; ++y) {
+		const attendee = new Attendee(x, y);
 		crowd.push(attendee);
 		attendee.addToScene(scene);
 	}
@@ -134,6 +134,7 @@ document.addEventListener('DOMContentLoaded', e => {
 				console.log('You splashed the fash!');
 				done = true;
 				milkshake.splat();
+				fash.splash();
 				milkshake.el.style.display = 'none';
 			}
 		}
@@ -154,7 +155,8 @@ class Thing {
 		this.y = y;
 		this.z = z;
 		this.el = document.createElement('div');
-		this.el.style.background = `hsla(${Math.random() * 360}deg, 50%, 50%, 100%)`;
+		// debug:
+		// this.el.style.background = `hsla(${Math.random() * 360}deg, 50%, 50%, 100%)`;
 		this.el.classList.add('thing');
 	}
 
@@ -169,14 +171,23 @@ class Thing {
 				${this.z - depth / 2}em)`;
 		this.el.style.zIndex = ~~(this.z * 10000);
 	}
+
+	randomBg(type, n) {
+		this.el.style.backgroundImage =
+			`url('img/${type}${~~(Math.random() * n) + 1}.png')`;
+	}
 }
 
 class Attendee extends Thing {
-	constructor() {
-		super(Math.random() * width, 0, Math.random() * depth);
+	constructor(x, y) {
+		super(
+			(Math.random() * 0.05 + x / 9) * width,
+			Math.random() * 0.05 - 0.025,
+			(Math.random() * 0.05 + y / 9) * depth);
 		this.el.classList.add('attendee');
 		this.centralX = this.x;
 		this.phase = Math.random() * Math.PI * 2;
+		this.randomBg('attendee', 3);
 	}
 
 	update(timestamp) {
@@ -195,13 +206,18 @@ class Placard extends Thing {
 		this.speed = Math.random() * 0.0008 + 0.0005;
 		this.board = document.createElement('div');
 		if (Math.random() < 0.3) {
-			this.board.appendChild(document.createTextNode(
-				'i am a racist'));
+			text(this.board,
+				'i like racism',
+				'i am definitely straight',
+				'i’m not being racist right but vote racist'
+			);
 			this.el.classList.add('racist');
-		} else {
-			this.board.appendChild(document.createTextNode(
-				'go away, nigel'));
-		}
+		} else
+			text(this.board,
+				'STOP RACISM',
+				'SPLASH THE FASH',
+				'MILKSHAKES COME IN ALL COLOURS'
+			);
 		this.el.appendChild(this.board);
 		this.el.style.background = 'none';
 	}
@@ -211,6 +227,18 @@ class Placard extends Thing {
 		super.update(timestamp);
 		this.el.style.transform += `rotate(${ this.angle }deg)`;
 	}
+}
+
+function text(board, ...options) {
+	const text = options[~~(Math.random() * options.length)];
+	const span = document.createElement('span');
+	board.appendChild(span);
+	span.appendChild(document.createTextNode(text));
+	span.style.fontSize = `${Math.min(
+		30 / text.length,
+		8 / Math.max(...text.split(' ').map(w => w.length)),
+		1.2)
+	}em`;
 }
 
 class Milkshake extends Thing {
@@ -242,6 +270,7 @@ class Milkshake extends Thing {
 		this.vx = 0;
 		this.vy = 0;
 		this.vz = 0;
+		this.randomBg('milkshake', 3);
 	}
 
 	update(timestamp) {
@@ -291,6 +320,13 @@ class Fash extends Thing {
 	constructor() {
 		super(width / 2, 8, 0);
 		this.el.classList.add('fash');
+		this.randomBg('fash', 1);
+	}
+
+	splash() {
+		this.splashed = true;
+		this.el.style.backgroundImage =
+			this.el.style.backgroundImage.replace('fash', 'splashed');
 	}
 
 	xAt(timestamp) {
@@ -298,7 +334,8 @@ class Fash extends Thing {
 	}
 
 	update(timestamp) {
-		this.x = this.xAt(timestamp);
+		if (!this.splashed)
+			this.x = this.xAt(timestamp);
 		super.update(timestamp);
 	}
 }
