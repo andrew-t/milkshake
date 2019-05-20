@@ -70,6 +70,7 @@ body {
 	padding: 0.5em;
 	text-align: center;
 	font-family: 'Patrick Hand', 'Chalkboard', 'Comic Sans MS', sans-serif;
+	overflow: hidden;
 }
 .placard.racist > div {
 	font-family: 'Schoolbell', 'Chalkboard', 'Comic Sans MS', sans-serif;
@@ -91,6 +92,32 @@ body {
 	left: 19em;
 	top: 14em;
 	border-radius: 100%;
+}
+
+.splat {
+	width: 10em;
+	height: 10em;
+	left: 15em;
+	top: 10em;
+	border-radius: 100%;
+	opacity: 0;
+}
+.splat.go {
+	animation: fadeout 1s;
+}
+@keyframes fadeout {
+	from { opacity: 0.75; }
+	95% { opacity: 0.5; }
+	to { opacity: 0; }
+}
+
+.stain {
+	position: absolute;
+	width: 2em;
+	height: 2em;
+	border-radius: 1em;
+	background: #f88;
+	transform: translate(-1em, -1em);
 }
 
 .fash {

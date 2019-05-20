@@ -2,9 +2,9 @@ const attendance = 75,
 	width = 30,
 	depth = 20,
 	height = 12,
-	placardCount = 8,
-	gravity = -1.5 / 10000,
-	maxPower = 0.075,
+	placardCount = 7,
+	gravity = -1.4 / 10000,
+	maxPower = 0.07,
 	powerSpeed = maxPower / 1500;
 let lastFrame = Date.now();
 
@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', e => {
 		milkshake = new Milkshake(fash);
 	let angle = 0,
 		power = 0,
-		mouseDown, mouseUp, reset = 0, aiming = true;
+		mouseDown, mouseUp, lastReset = 0, aiming = true, done = false;
 
 	for (let i = 0; i < attendance; ++i) {
 		const attendee = new Attendee();
@@ -29,14 +29,14 @@ document.addEventListener('DOMContentLoaded', e => {
 	}
 	for (let i = 0; i < placardCount; ++i) {
 		const placard = new Placard();
-		crowd.push(placard);
+		placards.push(placard);
 		placard.addToScene(scene);
 	}
 	milkshake.addToScene(scene);
 	fash.addToScene(scene);
 
 	hud.addEventListener('mousemove', e => {
-		if (!aiming) return;
+		if (!aiming || done) return;
 		const y = 1 - e.layerY / hud.clientHeight,
 			x = e.layerX / hud.clientWidth;
 		angle = y * 60;
@@ -45,25 +45,20 @@ document.addEventListener('DOMContentLoaded', e => {
 	});
 
 	hud.addEventListener('mousedown', e => {
-		if (!aiming) return;
-		if (lastFrame > reset + 250)
-		mouseDown = lastFrame;
+		if (!aiming || done) return;
+		if (lastFrame > lastReset + 250)
+			mouseDown = lastFrame;
 	});
 	hud.addEventListener('mouseup', e => {
-		if (!aiming) return;
+		if (!aiming || done) return;
 		milkshake.launch(angle, Math.min(power, 2));
 		mouseDown = null;
 		mouseUp = lastFrame;
 		aiming = false;
 	});
 	hud.addEventListener('click', e => {
-		if (aiming) return;
-		if (lastFrame > mouseUp + 500) {
-			milkshake.reset();
-			mouseup = null;
-			reset = lastFrame;
-			aiming = true;
-		}
+		if (aiming || done) return;
+		if (lastFrame > mouseUp + 500) reset();
 	});
 
 	requestAnimationFrame(update);
@@ -80,7 +75,72 @@ document.addEventListener('DOMContentLoaded', e => {
 				maxPower);
 			powerDiv.style.transform = `scale(1, ${power / maxPower})`;
 		}
+		if (!done) checkCollisions();
 		requestAnimationFrame(update);
+	}
+
+	function checkCollisions(timestamp) {
+		if (milkshake.launched) {
+			if (milkshake.y < 0) {
+				console.log('You hit a spectator.');
+				miss();
+				return;
+			}
+			if (milkshake.z < -1) {
+				console.log('You hit the stage.');
+				miss();
+				return;
+			}
+			// check if we hit a placard
+			// console.log('Moved from', milkshake.lastZ, 'to', milkshake.z);
+			for (const placard of placards) {
+				// console.log('Placard is at', placard.z);
+				if (milkshake.z > placard.z || milkshake.lastZ < placard.z)
+					continue;
+				// we passed a placard!
+				let { x, y } = milkshake;
+				console.log('Placard passing coords:', { x, y });
+				// adjust for centre of placard rotation
+				x -= placard.x;
+				y -= placard.y - 2.5;
+				console.log('Relative to base:', { x, y });
+				// now rotate into placard-space
+				const placardRadians = -placard.angle * Math.PI / 180,
+					sin = Math.sin(placardRadians),
+					cos = Math.cos(placardRadians);
+				[ x, y ] = [ x * cos + y * sin, y * cos - x * sin ];
+				console.log('Placard-space coords:', { x, y });
+				// now check the collission
+				if ((Math.abs(x) < 2.5) && (y > 3) && (y < 7)) {
+					console.log('You hit a placard.');
+					miss();
+					const stain = document.createElement('div');
+					stain.classList.add('stain');
+					stain.style.left = `${2.5 + x}em`;
+					stain.style.top = `${7 - y}em`;
+					placard.board.appendChild(stain);
+					return;
+				}
+			}
+			// check if we hit the fash
+			if (milkshake.z < fash.z && milkshake.lastZ > fash.z
+				&& Math.abs(milkshake.x - fash.x) < 2.5
+				&& Math.abs(milkshake.y - fash.y) < 7.5)
+			{
+				console.log('You splashed the fash!');
+				done = true;
+				milkshake.splat();
+				milkshake.el.style.display = 'none';
+			}
+		}
+	}
+
+	function miss() {
+		milkshake.splat();
+		milkshake.reset();
+		mouseup = null;
+		lastReset = lastFrame;
+		aiming = true;
 	}
 });
 
@@ -125,34 +185,34 @@ class Attendee extends Thing {
 class Placard extends Thing {
 	constructor() {
 		super(Math.random() * width, 5, (Math.random() * 0.8 + 0.1) * depth);
+		// super(width / 2, 5, depth * 0.8); // (debug placard)
 		this.el.classList.add('placard');
 		this.phase = Math.random() * Math.PI * 2;
 		this.speed = Math.random() * 0.0008 + 0.0005;
-		const board = document.createElement('div');
+		this.board = document.createElement('div');
 		if (Math.random() < 0.3) {
-			board.appendChild(document.createTextNode(
+			this.board.appendChild(document.createTextNode(
 				'i am a racist'));
 			this.el.classList.add('racist');
 		} else {
-			board.appendChild(document.createTextNode(
+			this.board.appendChild(document.createTextNode(
 				'go away, nigel'));
 		}
-		this.el.appendChild(board);
+		this.el.appendChild(this.board);
 		this.el.style.background = 'none';
 	}
 
 	update(timestamp) {
+		this.angle = 35 * Math.cos(timestamp * this.speed + this.phase);
 		super.update(timestamp);
-		this.el.style.transform += `rotate(${
-			35 * Math.cos(timestamp * this.speed + this.phase)
-		}deg)`;
+		this.el.style.transform += `rotate(${ this.angle }deg)`;
 	}
 }
 
 class Milkshake extends Thing {
 	constructor(target) {
 		super();
-		this.splat = new Splat();
+		this.kersplat = new Splat();
 		this.el.classList.add('milkshake');
 		this.reset();
 		this.target = target;
@@ -167,7 +227,7 @@ class Milkshake extends Thing {
 		const flightTime = (this.target.z - this.z) / this.vz,
 			targetX = this.target.xAt(lastFrame + flightTime);
 		this.vx = this.vz * (this.x - targetX) / this.z;
-		this.splat.stop();
+		this.kersplat.stop();
 	}
 
 	reset() {
@@ -183,22 +243,25 @@ class Milkshake extends Thing {
 	update(timestamp) {
 		if (this.launched) {
 			const t = timestamp - lastFrame;
+			this.lastX = this.x;
+			this.lastY = this.y;
+			this.lastZ = this.z;
 			this.x += this.vx * t;
 			this.y += this.vy * t;
 			this.z += this.vz * t;
 			this.vy += gravity * t;
 		}
 		super.update(timestamp);
-		this.splat.update(timestamp);
+		this.kersplat.update(timestamp);
 	}
 
 	addToScene(scene) {
-		this.splat.addToScene(scene);
+		this.kersplat.addToScene(scene);
 		super.addToScene(scene);
 	}
 
 	splat() {
-		this.splat.splat(this.x, this.y, this.z);
+		this.kersplat.splat(this.lastX, this.lastY, this.lastZ);
 	}
 }
 
