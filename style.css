@@ -1,0 +1,101 @@
+@import url('https://fonts.googleapis.com/css?family=Patrick+Hand|Schoolbell&display=swap');
+
+body {
+	background: red;
+	overflow: hidden;
+	font-size: 1em;
+	user-select: none;
+}
+
+#scene, #hud {
+	width: 40em;
+	height: 30em;
+	overflow: hidden;
+	position: absolute;
+	top: 1em;
+	left: 1em;
+}
+#scene {
+	perspective: 15em;
+	perspective-origin: center;
+	background: white;
+}
+
+#power-container {
+	background: black;
+	position: absolute;
+	left: 1em;
+	top: 1em;
+	width: 1em;
+	height: 5em;
+}
+#power-meter {
+	background: red;
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 1em;
+	height: 5em;
+	transform: scale(1, 0);
+	transform-origin: 50% 100%;
+}
+
+.thing {
+	position: absolute;
+}
+
+.attendee {
+	width: 5em;
+	height: 5em;
+	left: 17.5em;
+	top: 12.5em;
+}
+
+.placard {
+	width: 5em;
+	height: 10em;
+	left: 17.5em;
+	top: 10em;
+	transform-origin: 2.5em 7.5em;
+}
+.placard > div {
+	background: white;
+	position: absolute;
+	top: 0.5em;
+	left: 0;
+	width: 5em;
+	height: 4em;
+	border: 0.1em solid black;
+	box-sizing: border-box;
+	padding: 0.5em;
+	text-align: center;
+	font-family: 'Patrick Hand', 'Chalkboard', 'Comic Sans MS', sans-serif;
+}
+.placard.racist > div {
+	font-family: 'Schoolbell', 'Chalkboard', 'Comic Sans MS', sans-serif;
+}
+.placard:before {
+	border: 0.1em solid black;
+	box-sizing: border-box;
+	position: absolute;
+	content: '';
+	background: #800;
+	width: 0.5em;
+	left: 2.25em;
+	height: 100%;
+}
+
+.milkshake {
+	width: 2em;
+	height: 2em;
+	left: 19em;
+	top: 14em;
+	border-radius: 100%;
+}
+
+.fash {
+	width: 5em;
+	height: 15em;
+	left: 17.5em;
+	top: 12.5em;
+}
