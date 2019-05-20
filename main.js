@@ -5,7 +5,8 @@ const attendance = 75,
 	placardCount = 7,
 	gravity = -1.4 / 10000,
 	maxPower = 0.07,
-	powerSpeed = maxPower / 1500;
+	powerSpeed = maxPower / 1500,
+	milkshakeCollisionRadius = 0.5;
 let lastFrame = Date.now();
 
 document.addEventListener('DOMContentLoaded', e => {
@@ -111,7 +112,10 @@ document.addEventListener('DOMContentLoaded', e => {
 				[ x, y ] = [ x * cos + y * sin, y * cos - x * sin ];
 				console.log('Placard-space coords:', { x, y });
 				// now check the collission
-				if ((Math.abs(x) < 2.5) && (y > 3) && (y < 7)) {
+				if ((Math.abs(x) < 2.5 + milkshakeCollisionRadius)
+					&& (y > 3 - milkshakeCollisionRadius)
+					&& (y < 7 + milkshakeCollisionRadius))
+				{
 					console.log('You hit a placard.');
 					miss();
 					const stain = document.createElement('div');
