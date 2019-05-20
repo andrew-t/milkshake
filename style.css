@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css?family=Patrick+Hand|Schoolbell&display=swap');
 
 body {
-	background: red;
+	background: black;
 	overflow: hidden;
 	font-size: 1em;
 	user-select: none;
@@ -12,8 +12,8 @@ body {
 	height: 30em;
 	overflow: hidden;
 	position: absolute;
-	top: 1em;
-	left: 1em;
+	top: 0em;
+	left: 0em;
 }
 #scene {
 	perspective: 15em;
@@ -22,21 +22,34 @@ body {
 	background-size: 100% 100%;
 }
 
+#angle {
+	font-family: 'Patrick Hand', 'Chalkboard', 'Comic Sans MS', sans-serif;
+	font-size: 2em;
+	text-shadow: 0 0.1em 0.1em black;
+	left: 0.5em;
+	top: 0.5em;
+	position: absolute;
+	color: white;
+}
+
 #power-container {
 	background: black;
 	position: absolute;
 	left: 1em;
-	top: 1em;
+	top: 5em;
 	width: 1em;
-	height: 5em;
+	height: 20em;
+	border: 0.1em solid white;
+	border-radius: 0.1em;
+	overflow: none;
 }
 #power-meter {
 	background: red;
 	position: absolute;
 	left: 0;
 	top: 0;
-	width: 1em;
-	height: 5em;
+	width: 100%;
+	height: 100%;
 	transform: scale(1, 0);
 	transform-origin: 50% 100%;
 }
@@ -136,4 +149,42 @@ body {
 	height: 15em;
 	left: 17.5em;
 	top: 12.5em;
+}
+
+#watermark {
+	font-family: 'Patrick Hand', 'Chalkboard', 'Comic Sans MS', sans-serif;
+	font-size: 1em;
+	background: white;
+	box-shadow: 0 0.1em 0.2em black;
+	position: absolute;
+	right: 1em;
+	bottom: 1em;
+	padding: 0.5em 1em;
+	border-radius: 1em;
+}
+#watermark a {
+	color: blue;
+}
+#watermark a:hover {
+	color: red;
+}
+
+#splash-screen { /* lol */
+	z-index: 1000;
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100vw;
+	height: 100vh;
+	font-family: 'Patrick Hand', 'Chalkboard', 'Comic Sans MS', sans-serif;
+	background: #000000c8;
+	color: white;
+	padding: 1em 2em;
+	overflow: scroll;
+	box-sizing: border-box;
+	text-align: center;
+	font-size: 1.2em;
+}
+h1 {
+	font-size: 3em;
 }

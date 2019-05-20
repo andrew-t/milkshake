@@ -10,6 +10,10 @@ let lastFrame = Date.now();
 
 document.addEventListener('DOMContentLoaded', e => {
 
+	const splashScreen = document.getElementById('splash-screen');
+	splashScreen.addEventListener('click', e =>
+		splashScreen.style.display = 'none');
+
 	const scene = document.getElementById('scene'),
 		hud = document.getElementById('hud'),
 		angleSpan = document.getElementById('angle'),
@@ -146,6 +150,24 @@ document.addEventListener('DOMContentLoaded', e => {
 		mouseup = null;
 		lastReset = lastFrame;
 		aiming = true;
+	}
+
+	resize();
+	window.addEventListener('resize', resize);
+	function resize() {
+		const w = window.innerWidth, h = window.innerHeight,
+			ar = w / h;
+		if (ar > 4 / 3) {
+			document.body.style.fontSize = `${h / 30}px`;
+			scene.style.top = hud.style.top = '0';
+			scene.style.left = hud.style.left =
+				`${(w - (h * 4 / 3)) / 2}px`;
+		} else {
+			document.body.style.fontSize = `${w / 40}px`;
+			scene.style.left = hud.style.left = '0';
+			scene.style.top = hud.style.top =
+				`${(h - (w * 3 / 4)) / 2}px`;
+		}
 	}
 });
 
