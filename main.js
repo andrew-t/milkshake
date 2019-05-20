@@ -132,10 +132,13 @@ document.addEventListener('DOMContentLoaded', e => {
 			}
 			// check if we hit the fash
 			if (milkshake.z < fash.z && milkshake.lastZ > fash.z
-				&& Math.abs(milkshake.x - fash.x) < 2.5
-				&& Math.abs(milkshake.y - fash.y) < 7.5)
+				&& Math.abs(milkshake.x - fash.x) < 1.5
+				&& Math.abs(milkshake.y - fash.y) < 5.5)
 			{
 				console.log('You splashed the fash!');
+				console.log('Fash-space coords:', {
+					x: milkshake.x - fash.x,
+					y: milkshake.y - fash.y });
 				done = true;
 				milkshake.splat();
 				fash.splash();
@@ -340,7 +343,7 @@ class Splat extends Thing {
 
 class Fash extends Thing {
 	constructor() {
-		super(width / 2, 8, 0);
+		super(width / 2, 4, 0);
 		this.el.classList.add('fash');
 		this.randomBg('fash', 1);
 	}
