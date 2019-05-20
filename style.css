@@ -18,7 +18,7 @@ body {
 #scene {
 	perspective: 15em;
 	perspective-origin: center;
-	background-image: url('img/background.png');
+	background-image: url('/milkshake/img/background.png');
 	background-size: 100% 100%;
 }
 
@@ -88,12 +88,12 @@ body {
 	text-align: center;
 	font-family: 'Patrick Hand', 'Chalkboard', 'Comic Sans MS', sans-serif;
 	overflow: hidden;
-	line-height: 1;
+	line-height: 0.85em;
 	padding: 0.25em 0.5em;
 }
 .placard.racist > div {
 	font-family: 'Schoolbell', 'Chalkboard', 'Comic Sans MS', sans-serif;
-	line-height: 0.7;
+	line-height: 0.7em;
 	padding: 0.5em;
 }
 .placard:before {
@@ -122,7 +122,7 @@ body {
 	top: 10em;
 	border-radius: 100%;
 	opacity: 0;
-	background-image: url('img/big-splat.png');
+	background-image: url('/milkshake/img/big-splat.png');
 }
 .splat.go {
 	animation: fadeout 1s;
@@ -137,7 +137,7 @@ body {
 	width: 3em;
 	height: 3em;
 	border-radius: 1em;
-	background-image: url('img/splat.png');
+	background-image: url('/milkshake/img/splat.png');
 	background-size: contain;
 	background-repeat: no-repeat;
 	background-origin: 50% 50%;

@@ -199,7 +199,7 @@ class Thing {
 
 	randomBg(type, n) {
 		this.el.style.backgroundImage =
-			`url('img/${type}${~~(Math.random() * n) + 1}.png')`;
+			`url('/milkshake/img/${type}${~~(Math.random() * n) + 1}.png')`;
 	}
 }
 
@@ -234,14 +234,20 @@ class Placard extends Thing {
 			text(this.board,
 				'i like racism',
 				'i am definitely straight',
-				'i’m not being racist right but vote racist'
+				'i’m not being racist, right, but vote racist',
+				'learn are language',
+				'ban those other ones'
 			);
 			this.el.classList.add('racist');
 		} else
 			text(this.board,
-				'STOP RACISM',
+				'STOP RACISM NOW',
 				'SPLASH THE FASH',
-				'MILKSHAKES COME IN ALL COLOURS'
+				'MILKSHAKES COME IN ALL COLOURS',
+				'TRIPLE-EQUAL RIGHTS',
+				'WHY ARE WE HOLDING OUR PLACARDS BACKWARDS?           ',
+				'LESS OF THIS PLEASE',
+				'GO AWAY, BAD MEN           '
 			);
 		this.el.appendChild(this.board);
 		this.el.style.background = 'none';
@@ -260,8 +266,8 @@ function text(board, ...options) {
 	board.appendChild(span);
 	span.appendChild(document.createTextNode(text));
 	span.style.fontSize = `${Math.min(
-		30 / text.length,
-		8 / Math.max(...text.split(' ').map(w => w.length)),
+		24 / text.length,
+		8 / Math.max(...text.split(/[- ]/g).map(w => w.length)),
 		1.2)
 	}em`;
 }
